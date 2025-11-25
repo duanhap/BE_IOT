@@ -1,5 +1,5 @@
 # app/mqtt_app.py
-from app.utils.mqtt_client import start_mqtt
+from app.mqtt.mqtt_service import start_mqtt
 import time
 
 def run():

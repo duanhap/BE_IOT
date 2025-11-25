@@ -18,7 +18,6 @@ smart_home_backend/
 │
 │   ├── services/              ← Business logic
 │   │   ├── device_service.py
-│   │   ├── mqtt_service.py    ← Xử lý payload từ MQTT
 │   │   └── voice_service.py
 │
 │   ├── routers/               ← HTTP API Routes
@@ -26,10 +25,10 @@ smart_home_backend/
 │   │   ├── history_routes.py
 │   │   └── voice_routes.py
 │
-│   ├── utils/     
+│   ├── mqtt/     
 │   │   ├── mqtt_client.py     ← MQTT publish/subscribe
-│   │   ├── voice_processor.py ← NLP xử lý giọng nói
-│   │   └── logger.py          ← Logging
+|   |   ├── mqtt_handler.py      👉 Xử lý từng topic
+│   │   └── mqtt_service.py    ← Xử lý payload từ MQTT
 │   ├── .env                   ← Config DB , MQTT
 └── run_http.py                ← Chạy API (uvicorn)
 └── run_mqtt.py                ← Chạy MQTT worker (background)
