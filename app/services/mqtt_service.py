@@ -9,16 +9,18 @@ from datetime import datetime
 # voice_repo = VoiceHistoryRepository()
 
 
-def handle_mqtt_message(topic: str, payload: bytes):
+def handle_mqtt_message(topic: str, payload: str):
     """Xử lý message nhận từ MQTT."""
-    try:
-        data = json.loads(payload.decode("utf-8"))
-    except Exception:
-        print("❌ Invalid JSON payload:", payload)
-        return
-
-    print(f"\n📨 [MQTT] Topic: {topic}")
-    print("   Payload:", data)
+    print(topic)
+    print(payload)
+    # try:
+    #     data = json.loads(payload.decode("utf-8"))
+    # except Exception:
+    #     print("❌ Invalid JSON payload:", payload)
+    #     return
+    #
+    # print(f"\n📨 [MQTT] Topic: {topic}")
+    # print("   Payload:", data)
 
     # # Example topic: iot/device/123/status
     # if topic.startswith("iot/device/"):
