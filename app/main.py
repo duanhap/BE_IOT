@@ -3,12 +3,21 @@ from app.routers.history_routes import router as history_router
 from app.routers.temperature_routes import router as temperature_router
 from app.mqtt.mqtt_service import start_mqtt, publish
 from app.routers.device_routes import router as device_router
+from fastapi.middleware.cors import CORSMiddleware
+
 
 
 
 
 app = FastAPI()
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],   # Cho phép tất cả domain
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 app.include_router(history_router)
 app.include_router(temperature_router)
 app.include_router(device_router)
