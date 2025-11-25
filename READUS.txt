@@ -1,0 +1,47 @@
+smart_home_backend/
+│
+├── app/
+│   ├── main.py                ← Khởi chạy FastAPI (HTTP API)
+│   ├── mqtt_app.py            ← Chạy MQTT client/subscriber│
+│   ├── database/
+│   │   ├── connection.py      ← MySQL connection (SQLAlchemy)
+│   │   └── base.py
+│
+│   ├── models/                ← ORM mapping DB table
+│   │   ├── device.py
+│   │   ├── device_history.py
+│   │   └── voice_history.py
+│
+│   ├── schemas/               ← Pydantic request/response schema
+│
+│   ├── repositories/          ← CRUD với DB
+│
+│   ├── services/              ← Business logic
+│   │   ├── device_service.py
+│   │   ├── mqtt_service.py    ← Xử lý payload từ MQTT
+│   │   └── voice_service.py
+│
+│   ├── routers/               ← HTTP API Routes
+│   │   ├── device_routes.py
+│   │   ├── history_routes.py
+│   │   └── voice_routes.py
+│
+│   ├── utils/     
+│   │   ├── mqtt_client.py     ← MQTT publish/subscribe
+│   │   ├── voice_processor.py ← NLP xử lý giọng nói
+│   │   └── logger.py          ← Logging
+│   ├── .env                   ← Config DB , MQTT
+└── run_http.py                ← Chạy API (uvicorn)
+└── run_mqtt.py                ← Chạy MQTT worker (background)
+
+| Luồng               | Làm gì                                                         | Code nằm đâu?                                |
+| ------------------- | -------------------------------------------------------------- | -------------------------------------------- |
+| HTTP                | Giao tiếp với Web, Mobile, CRUD device, history                | `routers/`, `services/`, `repositories/`     |
+| MQTT Subscribe      | Nhận dữ liệu cảm biến / giọng nói từ ESP32/Raspberry Pi        | `mqtt_client.py`, `mqtt_service.py`          |
+| MQTT Publish        | Gửi lệnh điều khiển thiết bị                                   | `mqtt_client.py`, gọi từ `device_service.py` |
+| NLP xử lý giọng nói | Sau khi nhận `raw text` từ MQTT → xử lý backend → nhận ra lệnh | `voice_processor.py`, `voice_service.py`     |
+
+Luồng hoạt động thực tế (MQTT điều khiển)
+ESP32 → MQTT Broker → backend → xử lý payload → update DB → publish ngược → ESP32 nhận lệnh
+Luồng xử lý Voice (INMP441)
+ESP32 (Mic) → MQTT (raw text) → backend xử lý NLP → xác định lệnh → update VoiceHistory + DeviceHistory → publish MQTT → ESP32 bật thiết bị
