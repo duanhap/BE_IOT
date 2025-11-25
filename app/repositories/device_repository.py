@@ -15,3 +15,6 @@ class DeviceRepository:
         self.db.commit()
         self.db.refresh(device)
         return device
+
+    def get_all(self):
+        return self.db.query(Device).all()

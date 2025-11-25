@@ -16,3 +16,6 @@ class DeviceService:
             device.value = None
         self.repo.update(device)
         return device
+
+    def get_all_device(self):
+        return self.repo.get_all()

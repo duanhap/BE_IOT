@@ -48,3 +48,13 @@ def control_device(device_id: int, action: str,action_type: str ,db: Session = D
         "action": action,
         "action_type": action_type
     }
+
+@router.get("/")
+def get_all(db: Session = Depends(get_db)):
+    """
+    Lấy tất cả thiết bị
+    """
+    device_service = DeviceService(db)
+    devices = device_service.get_all_device()
+
+    return [device.to_dict() for device in devices]
