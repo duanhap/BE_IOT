@@ -16,7 +16,7 @@ os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 current_session = {"filename": None}
 
 print("Đang load Whisper...")
-model = whisper.load_model("large")
+model = whisper.load_model("base")
 print("Whisper ready!")
 
 router = APIRouter(prefix="/voice", tags=["Voice Handler"])

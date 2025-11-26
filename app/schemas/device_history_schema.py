@@ -14,6 +14,8 @@ class DeviceHistoryBase(BaseModel):
 class DeviceHistoryResponse(DeviceHistoryBase):
     id: int
     device_id: int
+    device_name: Optional[str] = None
+    device_name_vn: Optional[str] = None
     created_at: datetime
 
     class Config:
