@@ -2,11 +2,13 @@ import os
 import wave
 import numpy as np
 from datetime import datetime
+from math import ceil
 
 import whisper
 from app.repositories.device_repository import DeviceRepository
 from app.repositories.voice_history_repository import VoiceHistoryRepository
 from app.services.device_history_service import DeviceHistoryService
+from app.schemas.voice_history_schema import VoiceHistoryResponse
 from sqlalchemy.orm import Session
 from app.mqtt.mqtt_service import publish
 
@@ -16,6 +18,34 @@ class VoiceHistoryService:
         self.db = db
         self.repository = VoiceHistoryRepository(db)
         self.device_repo = DeviceRepository(db)
+    
+    def get_all_histories(self):
+        return self.repository.get_all()
+    
+    def get_paginated_histories(self, page: int = 1, page_size: int = 10):
+        items, total = self.repository.get_paginated(page, page_size)
+        total_pages = ceil(total / page_size) if page_size > 0 else 0
+        # Convert items to response schema with device names
+        formatted_items = []
+        for item in items:
+            item_dict = {
+                "id": item.id,
+                "raw": item.raw,
+                "device_id": item.device_id,
+                "action_name": item.action_name,
+                "created_at": item.created_at,
+                "processed_at": item.processed_at,
+                "device_name": item.device.name if item.device else None,
+                "device_name_vn": item.device.name_vn if item.device else None
+            }
+            formatted_items.append(VoiceHistoryResponse(**item_dict))
+        return {
+            "items": formatted_items,
+            "total": total,
+            "page": page,
+            "page_size": page_size,
+            "total_pages": total_pages
+        }
 
     def detect_language(self, raw_data: bytes) -> str:
         """

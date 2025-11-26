@@ -6,7 +6,7 @@ def start_mqtt():
     client = get_mqtt_client()
     client.on_connect = on_connect
     client.on_message = on_message
-    client.connect("localhost", 1883, 60)
+    client.connect("172.30.248.159", 1883, 60)
     client.loop_start()
     return client
 

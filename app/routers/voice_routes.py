@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, Request
+from fastapi import APIRouter, Depends, HTTPException, Request, Query
 from fastapi.responses import JSONResponse
 import whisper
 import numpy as np
@@ -7,6 +7,7 @@ import os
 import uuid
 from app.services.voice_history_service import VoiceHistoryService
 from app.database.database import get_db
+from app.schemas.voice_history_schema import VoiceHistoryResponse, PaginationResponse
 from sqlalchemy.orm import Session
 
 UPLOAD_FOLDER = os.path.join(os.path.dirname(__file__), "..", "uploads")
@@ -77,3 +78,13 @@ async def get_session():
         "current_session": current_session["filename"],
         "session_exists": current_session["filename"] is not None
     }
+
+@router.get("/history", response_model=PaginationResponse[VoiceHistoryResponse])
+def get_voice_histories(
+    db: Session = Depends(get_db),
+    page: int = Query(1, ge=1, description="Số trang"),
+    page_size: int = Query(10, ge=1, le=100, description="Số item mỗi trang")
+):
+    """Lấy danh sách lịch sử voice với phân trang"""
+    service = VoiceHistoryService(db)
+    return service.get_paginated_histories(page=page, page_size=page_size)
