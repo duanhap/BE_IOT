@@ -6,12 +6,14 @@ from datetime import datetime
 import whisper
 from app.repositories.device_repository import DeviceRepository
 from app.repositories.voice_history_repository import VoiceHistoryRepository
+from app.services.device_history_service import DeviceHistoryService
 from sqlalchemy.orm import Session
 from app.mqtt.mqtt_service import publish
 
 
 class VoiceHistoryService:
     def __init__(self, db: Session):
+        self.db = db
         self.repository = VoiceHistoryRepository(db)
         self.device_repo = DeviceRepository(db)
 
@@ -149,7 +151,13 @@ class VoiceHistoryService:
             # update device status
             device_obj.status = action
             self.device_repo.update(device_obj)
-
+        device_history_service = DeviceHistoryService(self.db)
+        device_history_service.create_history(
+            device_id=device_obj.id if device_obj else None,
+            action_type=action,
+            action_value=None,
+            triggered_by="voice"
+        )
         # ---- lưu VoiceHistory ----
         history_data = {
             "raw": text,
