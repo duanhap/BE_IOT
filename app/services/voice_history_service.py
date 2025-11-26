@@ -10,7 +10,7 @@ from app.services.device_history_service import DeviceHistoryService
 from sqlalchemy.orm import Session
 from app.mqtt.mqtt_service import publish
 
-
+import time
 class VoiceHistoryService:
     def __init__(self, db: Session):
         self.db = db
@@ -146,8 +146,11 @@ class VoiceHistoryService:
 
         # ---- publish MQTT nếu valid ----
         if device_obj and action:
-            print(f"🚀 Publishing MQTT: {device_obj.name} -> {action}")
+            print(f">>>>>>>>>>>>>>>>>>>>>>>>>>>> Publishing MQTT: {device_obj.name} -> {action}")
+            start_time = time.time()
             publish(device_obj.name, action)
+            end_time = time.time()
+            print(f"MQTT published in {end_time - start_time:.3f} seconds")
             # update device status
             device_obj.status = action
             self.device_repo.update(device_obj)
