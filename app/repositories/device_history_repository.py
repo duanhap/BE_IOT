@@ -8,3 +8,12 @@ class DeviceHistoryRepository:
 
     def get_all(self):
         return self.db.query(DeviceHistory).all()
+    def create(self, data: dict):
+        history = DeviceHistory(**data)
+        self.db.add(history)
+        self.db.commit()
+        self.db.refresh(history)
+        return history
+
+    def get_all_by_device(self, device_id: int):
+        return self.db.query(DeviceHistory).filter(DeviceHistory.device_id == device_id).all()

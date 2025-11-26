@@ -10,6 +10,7 @@ class Device(database.Base):
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     name = Column(String(100), nullable=False)
+    name_vn = Column(String(100), nullable=False)
     location = Column(String(100), nullable=True)
     status = Column(Enum("on", "off"), default="off", nullable=False)
     value = Column(String(50), nullable=True)
