@@ -6,7 +6,7 @@ from pydub import AudioSegment
 # =========================
 # CẤU HÌNH
 # =========================
-MP3_FILE = "test77.mp3"  # file MP3 của bạn
+MP3_FILE = "test2.mp3"  # file MP3 của bạn
 SERVER_URL = "http://127.0.0.1:8000/voice"
 CHUNK_SIZE = 3200       # size mỗi chunk (bytes) giả lập ESP32 gửi
 # =========================
