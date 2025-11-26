@@ -9,7 +9,7 @@ DB_URL = os.getenv("DB_URL")
 
 class Database:
     def __init__(self, url):
-        self.engine = create_engine(url, echo=True)
+        self.engine = create_engine(url, echo=True,     connect_args={"init_command": "SET time_zone = '+07:00'"})
         self.SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=self.engine)
         self.Base = declarative_base()
 
